@@ -50,8 +50,8 @@ python ${InfECE}/calc_ece.py \
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
 
-for step in {2000..100000..2000};do
-	for SUBSET in valid test;do
+for SUBSET in valid test;do
+	for step in {2000..100000..2000};do
 		infece $DIR/${SUBSET}_${step}.gen
 	done
 done
