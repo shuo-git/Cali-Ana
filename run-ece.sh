@@ -4,7 +4,7 @@ InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 DISK2=/apdcephfs/share_916081/vinceswang
-DIR=$DISK2/results/wmt14_en_de_stanford_base/score/sample_status
+DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base-bak/inference
 
 inf_ece(){
 GEN=$1
@@ -12,23 +12,23 @@ ref=$GEN.ref
 hyp=$GEN.sys
 prob=$GEN.prob
 
-python ./delete_eos.py ${prob}
+# python ./delete_eos.py ${prob}
 prob=$GEN.prob.noeos
 
-echo "Generating TER label..."
-python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
-python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
+# echo "Generating TER label..."
+# python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
+# python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
 
-java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s
+# java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s
 
-python ${InfECE}/parse_xml.py ${hyp}.xml ${hyp}.shifted
-python ${InfECE}/shift_back.py ${hyp}.shifted.text ${hyp}.shifted.label ${hyp}.pra
+# python ${InfECE}/parse_xml.py ${hyp}.xml ${hyp}.shifted
+# python ${InfECE}/shift_back.py ${hyp}.shifted.text ${hyp}.shifted.label ${hyp}.pra
 
-rm ${ref}.ref ${hyp}.hyp ${hyp}.ter ${hyp}.sum ${hyp}.sum_nbest \
-    ${hyp}.pra_more ${hyp}.pra ${hyp}.xml ${hyp}.shifted.text \
-    ${hyp}.shifted.label
-mv ${hyp}.shifted.text.sb ${hyp}.sb
-mv ${hyp}.shifted.label.sb ${hyp}.label
+# rm ${ref}.ref ${hyp}.hyp ${hyp}.ter ${hyp}.sum ${hyp}.sum_nbest \
+#     ${hyp}.pra_more ${hyp}.pra ${hyp}.xml ${hyp}.shifted.text \
+#     ${hyp}.shifted.label
+# mv ${hyp}.shifted.text.sb ${hyp}.sb
+# mv ${hyp}.shifted.label.sb ${hyp}.label
 
 echo "Filtering unaligned tokens..."
 for f in ${hyp} ${hyp}.label ${prob};do
@@ -45,7 +45,7 @@ python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
-    --vocabulary ${vocab} >> $DIR/infece.log
+    --vocabulary ${vocab} >> $DIR/token-infece.log
 
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
@@ -66,7 +66,7 @@ python ${InfECE}/calc_ece.py \
 
 for SUBSET in valid test;do
 	for step in {2000..100000..2000};do
-		train_ece $DIR/status_${SUBSET}_${step}.txt $SUBSET
+		inf_ece $DIR/${SUBSET}_${step}.gen
 	done
 done
 
