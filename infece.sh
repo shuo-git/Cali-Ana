@@ -51,8 +51,8 @@ rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 DISK2=/apdcephfs/share_916081/vinceswang
 DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base-bak/inference
 DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_ada_cali_base-bak/inference"
-for step in 2000;do
-	for SUBSET in valid;do
+for step in {2000..100000..2000};do
+	for SUBSET in valid test;do
 		infece $DIR/${SUBSET}_${step}.gen
 	done
 done
