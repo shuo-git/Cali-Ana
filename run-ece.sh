@@ -62,7 +62,7 @@ python ${InfECE}/calc_ece.py \
 
 for SUBSET in valid test;do
 	for step in {2000..100000..2000};do
-		infece $DIR/status_${SUBSET}_${step}.txt $SUBSET
+		train_ece $DIR/status_${SUBSET}_${step}.txt $SUBSET
 	done
 done
 
