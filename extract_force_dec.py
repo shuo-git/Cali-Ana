@@ -17,7 +17,7 @@ indices = [int(l[0]) for l in lines]
 probs = [delete_pad(l[1].split()) for l in lines]
 accs = [delete_pad(l[2].split()) for l in lines]
 data = zip(indices, probs, accs)
-sort(data, key=lambda x: x[0])
+data.sort(key=lambda x: x[0])
 indices, probs, accs = zip(*data)
 
 words2file(probs, sys.argv[1] + '.prob')
