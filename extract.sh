@@ -13,8 +13,8 @@ extract_fd(){
 }
 
 DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_base/score/sample_status"
-for step in 2000;do
-	for SUBSET in valid;do
+for step in {2000..100000..2000};do
+	for SUBSET in valid test;do
 		extract_fd $DIR/status_${SUBSET}_${step}.txt
 	done
 done
