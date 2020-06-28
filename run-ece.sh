@@ -4,7 +4,7 @@ InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 DISK2=/apdcephfs/share_916081/vinceswang
-DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base/score/sample_status
+DIR=$DISK2/results/wmt14_en_de_stanford_base/score/sample_status
 
 inf_ece(){
 GEN=$1
