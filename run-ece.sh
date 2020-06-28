@@ -53,10 +53,14 @@ rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 train_ece(){
 FD=$1
 SUBSET=$2
+
+python ./delete_eos.py $FD.prob
+python ./delete_eos.py $FD.acc
+
 python ${InfECE}/calc_ece.py \
-    --prob $FD.prob \
+    --prob $FD.prob.noeos \
     --trans $DIR/$SUBSET.de \
-    --label $FD.acc \
+    --label $FD.acc.noeos \
     --vocabulary ${vocab} >> $DIR/trainece.log
 }
 
