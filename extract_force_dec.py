@@ -21,4 +21,4 @@ data.sort(key=lambda x: x[0])
 indices, probs, accs = list(zip(*data))
 
 words2file(probs, sys.argv[1] + '.prob')
-words2file(acc, sys.argv[1] + '.acc')
+words2file(accs, sys.argv[1] + '.acc')
