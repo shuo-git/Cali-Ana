@@ -3,6 +3,8 @@ DISK1=/apdcephfs/private_vinceswang
 InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
+DISK2=/apdcephfs/share_916081/vinceswang
+DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base-bak/inference
 
 infece(){
 GEN=$1
@@ -43,14 +45,11 @@ python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
-    --vocabulary ${vocab} > $GEN.infece
+    --vocabulary ${vocab} >> $DIR/infece.log
 
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
 
-DISK2=/apdcephfs/share_916081/vinceswang
-DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base-bak/inference
-DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_ada_cali_base-bak/inference"
 for step in {2000..100000..2000};do
 	for SUBSET in valid test;do
 		infece $DIR/${SUBSET}_${step}.gen
