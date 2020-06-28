@@ -7,7 +7,7 @@ extract(){
 	grep ^P $GEN | python3 $CODE/sorted_cut_fairseq_gen.py 1 > $GEN.prob
 }
 
-DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_ada_cali_base-bak/inference"
+DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_base/inference"
 for step in {2000..100000..2000};do
 	for SUBSET in valid test;do
 		extract $DIR/${SUBSET}_${step}.gen
