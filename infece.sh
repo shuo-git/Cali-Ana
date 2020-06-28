@@ -6,7 +6,7 @@ vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 DISK2=/apdcephfs/share_916081/vinceswang
 DIR=$DISK2/results/wmt14_en_de_stanford_ada_cali_base-bak/inference
 
-infece(){
+inf_ece(){
 GEN=$1
 ref=$GEN.ref
 hyp=$GEN.sys
@@ -48,6 +48,10 @@ python ${InfECE}/calc_ece.py \
     --vocabulary ${vocab} >> $DIR/infece.log
 
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
+}
+
+train_ece(){
+
 }
 
 for SUBSET in valid test;do
