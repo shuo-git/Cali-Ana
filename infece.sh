@@ -10,6 +10,9 @@ ref=$GEN.ref
 hyp=$GEN.sys
 prob=$GEN.prob
 
+python ./delete_eos.py ${prob}
+prob=$GEN.prob.noeos
+
 echo "Generating TER label..."
 python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
 python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
