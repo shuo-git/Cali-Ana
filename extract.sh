@@ -12,9 +12,9 @@ extract_fd(){
 	python3 $CODE/extract_force_dec.py $FD
 }
 
-DIR="/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_ada_cali_base/score/sample_status"
+DIR=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big/inference
 for step in {2000..100000..2000};do
 	for SUBSET in valid test;do
-		extract_fd $DIR/status_${SUBSET}_${step}.txt
+		extract_gen $DIR/${SUBSET}_${step}.gen
 	done
 done
