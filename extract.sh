@@ -13,7 +13,7 @@ extract_fd(){
 }
 
 DIR=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big/inference
-for step in {2000..100000..2000};do
+for step in {2000..300000..2000};do
 	for SUBSET in valid test;do
 		extract_gen $DIR/${SUBSET}_${step}.gen
 	done
