@@ -4,7 +4,7 @@ InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 DISK2=/apdcephfs/share_916081/vinceswang
-DIR=$DISK2/results/wmt14_en_de_stanford_big/score/sample_status
+DIR=$DISK2/results/wmt14_en_de_stanford_big_ls_1325/inference
 
 inf_ece(){
 GEN=$1
@@ -66,7 +66,7 @@ python ${InfECE}/calc_ece.py \
 
 for SUBSET in valid test;do
 	for step in {2000..300000..2000};do
-		train_ece $DIR/status_${SUBSET}_${step}.txt $SUBSET
+		inf_ece $DIR/${SUBSET}_${step}.gen
 	done
 done
 
