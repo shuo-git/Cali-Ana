@@ -4,7 +4,8 @@ InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 DISK2=/apdcephfs/share_916081/vinceswang
-DIR=$DISK2/results/wmt14_en_de_stanford_big_ls_1325/inference
+DIR1=$DISK2/results/wmt14_en_de_stanford_big_scale_dynamic/inference
+DIR2=$DISK2/results/wmt14_en_de_stanford_big_scale_dynamic/score/sample_status
 
 inf_ece(){
 GEN=$1
@@ -45,7 +46,7 @@ python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
-    --vocabulary ${vocab} >> $DIR/token-infece.log
+    --vocabulary ${vocab} >> $DIR1/token-infece.log
 
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
@@ -59,14 +60,15 @@ python ./delete_eos.py $FD.acc
 
 python ${InfECE}/calc_ece.py \
     --prob $FD.prob.noeos \
-    --trans $DIR/$SUBSET.de \
+    --trans $DIR2/$SUBSET.de \
     --label $FD.acc.noeos \
-    --vocabulary ${vocab} >> $DIR/trainece.log
+    --vocabulary ${vocab} >> $DIR2/trainece.log
 }
 
 for SUBSET in valid test;do
 	for step in {2000..300000..2000};do
-		inf_ece $DIR/${SUBSET}_${step}.gen
+		inf_ece $DIR1/${SUBSET}_${step}.gen
+        train_ece $DIR2/status_${SUBSET}_${step}.txt $SUBSET
 	done
 done
 

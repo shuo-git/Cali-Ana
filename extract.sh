@@ -12,9 +12,11 @@ extract_fd(){
 	python3 $CODE/extract_force_dec.py $FD
 }
 
-DIR=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big_ls_1325/score/sample_status
+DIR1=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big_scale_dynamic/inference
+DIR2=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big_scale_dynamic/score/sample_status
 for step in {2000..300000..2000};do
 	for SUBSET in valid test;do
-		extract_fd $DIR/status_${SUBSET}_${step}.txt
+		extract_gen $DIR1/${SUBSET}_${step}.gen
+		extract_fd $DIR2/status_${SUBSET}_${step}.txt
 	done
 done
