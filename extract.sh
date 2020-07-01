@@ -11,7 +11,7 @@ extract_fd(){
 	FD=$1
 	python3 $CODE/extract_force_dec.py $FD
 }
-ROOT=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_big_scale_dynamic
+ROOT=/apdcephfs/share_916081/vinceswang/results/wmt14_en_de_stanford_ada_cali_big_scale_dynamic
 DIR1=$ROOT/inference
 DIR2=$ROOT/score/sample_status
 for step in {2000..30000..2000};do
