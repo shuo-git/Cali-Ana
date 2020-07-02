@@ -83,8 +83,8 @@ python ${InfECE}/calc_ece.py \
     --vocabulary ${vocab}
 }
 
-extract_gen $DIR1/test_best.gen
-inf_ece $DIR1/test_best.gen
+extract_gen $DIR1/test_checkpoint_best.4.gen
+inf_ece $DIR1/test_checkpoint_best.4.gen
 
 
 
