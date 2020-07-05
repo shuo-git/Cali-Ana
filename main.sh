@@ -5,7 +5,7 @@ TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 CODE=./
 DISK2=/apdcephfs/share_916081/vinceswang
-ROOT=$DISK2/results/wmt14_en_de_stanford_base
+ROOT=$DISK2/results/wmt14_en_de_stanford_$1
 DIR1=$ROOT/inference
 DIR2=$ROOT/score/sample_status
 
@@ -59,7 +59,7 @@ for f in ${hyp} ${hyp}.label ${prob};do
 done
 
 echo "Calculating inference ECE..."
-python ${InfECE}/calc_ece.py \
+python ${InfECE}/prepare4relia.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
@@ -83,8 +83,8 @@ python ${InfECE}/calc_ece.py \
     --vocabulary ${vocab}
 }
 
-extract_gen $DIR1/test_checkpoint_best.4.gen
-inf_ece $DIR1/test_checkpoint_best.4.gen
+GEN=$2
+extract_gen $DIR1/$GEN
+inf_ece $DIR1/$GEN
 
-
-
+# usage: ./main.sh base(exp_info) GEN
