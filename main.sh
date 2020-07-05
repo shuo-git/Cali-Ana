@@ -83,8 +83,8 @@ python ${InfECE}/calc_ece.py \
     --vocabulary ${vocab}
 }
 
-GEN=$2
-extract_gen $DIR1/$GEN
-inf_ece $DIR1/$GEN
+filename=$2
+extract_gen $DIR1/${filename}
+inf_ece $DIR1/${filename}
 
 # usage: ./main.sh base(exp_info) GEN
