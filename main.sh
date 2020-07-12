@@ -59,7 +59,7 @@ for f in ${hyp} ${hyp}.label ${prob};do
 done
 
 echo "Calculating inference ECE..."
-python ${InfECE}/prepare4relia.py \
+python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
