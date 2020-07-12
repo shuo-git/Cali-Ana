@@ -86,8 +86,8 @@ python ${InfECE}/calc_ece.py \
 filename=$2
 if [ "$3" = "train" ]
 then
-    extract_fd $DIR1/${filename}
-    train_ece $DIR1/${filename} valid
+    extract_fd $DIR2/${filename}
+    train_ece $DIR2/${filename} valid
 else
     extract_gen $DIR1/${filename}
     inf_ece $DIR1/${filename}
