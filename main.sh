@@ -84,7 +84,12 @@ python ${InfECE}/calc_ece.py \
 }
 
 filename=$2
-extract_gen $DIR1/${filename}
-inf_ece $DIR1/${filename}
-
-# usage: ./main.sh base(exp_info) GEN
+if [ "$3" = "train" ]
+then
+    extract_fd $DIR1/${filename}
+    train_ece $DIR1/${filename} valid
+else
+    extract_gen $DIR1/${filename}
+    inf_ece $DIR1/${filename}
+fi
+# usage: ./main.sh base(exp_info) GEN train/inf
