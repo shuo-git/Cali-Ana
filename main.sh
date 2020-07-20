@@ -33,7 +33,7 @@ prob=$GEN.prob
 python $CODE/delete_eos.py ${prob}
 prob=$GEN.prob.noeos
 
-echo "Generating TER label..."
+# echo "Generating TER label..."
 python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
 python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
 
@@ -48,7 +48,7 @@ rm ${ref}.ref ${hyp}.hyp ${hyp}.ter ${hyp}.sum ${hyp}.sum_nbest \
 mv ${hyp}.shifted.text.sb ${hyp}.sb
 mv ${hyp}.shifted.label.sb ${hyp}.label
 
-echo "Filtering unaligned tokens..."
+# echo "Filtering unaligned tokens..."
 for f in ${hyp} ${hyp}.label ${prob};do
     if [ ${f} = ${hyp} ]
     then
@@ -58,7 +58,7 @@ for f in ${hyp} ${hyp}.label ${prob};do
     fi
 done
 
-echo "Calculating inference ECE..."
+# echo "Calculating inference ECE..."
 # prepare4relia.py
 # calc_ece.py
 python ${InfECE}/calc_ece.py \
