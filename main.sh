@@ -52,7 +52,7 @@ echo "Filtering unaligned tokens..."
 for f in ${hyp} ${hyp}.label ${prob};do
     if [ ${f} = ${hyp} ]
     then
-        python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f}
+        python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
     else
         python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
     fi
