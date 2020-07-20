@@ -37,7 +37,7 @@ echo "Generating TER label..."
 python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
 python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
 
-java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s
+java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s > /dev/null
 
 python ${InfECE}/parse_xml.py ${hyp}.xml ${hyp}.shifted
 python ${InfECE}/shift_back.py ${hyp}.shifted.text ${hyp}.shifted.label ${hyp}.pra
@@ -59,6 +59,8 @@ for f in ${hyp} ${hyp}.label ${prob};do
 done
 
 echo "Calculating inference ECE..."
+# prepare4relia.py
+# calc_ece.py
 python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
