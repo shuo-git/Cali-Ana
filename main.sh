@@ -65,7 +65,8 @@ python ${InfECE}/calc_ece.py \
     --prob ${prob}.filt \
     --trans ${hyp}.filt \
     --label ${hyp}.label.filt \
-    --vocabulary ${vocab}
+    --vocabulary ${vocab} \
+    --bins 20
 
 rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
