@@ -24,73 +24,76 @@ extract_fd(){
 }
 
 inf_ece(){
-# usage: inf_ece $1
-GEN=$1
-ref=$GEN.ref
-hyp=$GEN.sys
-prob=$GEN.prob
+    # usage: inf_ece $1
+    GEN=$1
+    ref=$GEN.ref
+    hyp=$GEN.sys
+    prob=$GEN.prob
 
-python $CODE/delete_eos.py ${prob}
-prob=$GEN.prob.noeos
+    python $CODE/delete_eos.py ${prob}
+    prob=$GEN.prob.noeos
 
-# echo "Generating TER label..."
-python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
-python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
+    # echo "Generating TER label..."
+    python ${InfECE}/add_sen_id.py ${ref} ${ref}.ref
+    python ${InfECE}/add_sen_id.py ${hyp} ${hyp}.hyp
 
-java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s > /dev/null
+    java -jar ${TER}/tercom.7.25.jar -r ${ref}.ref -h ${hyp}.hyp -n ${hyp} -s > /dev/null
 
-python ${InfECE}/parse_xml.py ${hyp}.xml ${hyp}.shifted
-python ${InfECE}/shift_back.py ${hyp}.shifted.text ${hyp}.shifted.label ${hyp}.pra
+    python ${InfECE}/parse_xml.py ${hyp}.xml ${hyp}.shifted
+    python ${InfECE}/shift_back.py ${hyp}.shifted.text ${hyp}.shifted.label ${hyp}.pra
 
-rm ${ref}.ref ${hyp}.hyp ${hyp}.ter ${hyp}.sum ${hyp}.sum_nbest \
-    ${hyp}.pra_more ${hyp}.pra ${hyp}.xml ${hyp}.shifted.text \
-    ${hyp}.shifted.label
-mv ${hyp}.shifted.text.sb ${hyp}.sb
-mv ${hyp}.shifted.label.sb ${hyp}.label
+    rm ${ref}.ref ${hyp}.hyp ${hyp}.ter ${hyp}.sum ${hyp}.sum_nbest \
+        ${hyp}.pra_more ${hyp}.pra ${hyp}.xml ${hyp}.shifted.text \
+        ${hyp}.shifted.label
+    mv ${hyp}.shifted.text.sb ${hyp}.sb
+    mv ${hyp}.shifted.label.sb ${hyp}.label
 
-# echo "Filtering unaligned tokens..."
-for f in ${hyp} ${hyp}.label ${prob};do
-    if [ ${f} = ${hyp} ]
-    then
-        python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
-    else
-        python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
-    fi
-done
+    # echo "Filtering unaligned tokens..."
+    for f in ${hyp} ${hyp}.label ${prob};do
+        if [ ${f} = ${hyp} ]
+        then
+            python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
+        else
+            python ${InfECE}/filter_diff_tok.py ${hyp} ${hyp}.sb ${f} > /dev/null
+        fi
+    done
 
-# echo "Calculating inference ECE..."
-# prepare4relia.py
-# calc_ece.py
-python ${InfECE}/calc_ece.py \
-    --prob ${prob}.filt \
-    --trans ${hyp}.filt \
-    --label ${hyp}.label.filt \
-    --vocabulary ${vocab} \
-    --bins 20
+    # echo "Calculating inference ECE..."
+    # prepare4relia.py
+    # calc_ece.py
+    python ${InfECE}/calc_ece.py \
+        --prob ${prob}.filt \
+        --trans ${hyp}.filt \
+        --label ${hyp}.label.filt \
+        --vocabulary ${vocab} \
+        --bins 20 \
+        --partition balanced
 
-rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
+    rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
 
 train_ece(){
-# train_ece $1 $2
-FD=$1
-SUBSET=$2
+    # train_ece $1 $2
+    FD=$1
+    SUBSET=$2
 
-python $CODE/delete_eos.py $FD.prob
-python $CODE/delete_eos.py $FD.acc
+    python $CODE/delete_eos.py $FD.prob
+    python $CODE/delete_eos.py $FD.acc
 
-python ${InfECE}/calc_ece.py \
-    --prob $FD.prob.noeos \
-    --trans $DIR2/$SUBSET.de \
-    --label $FD.acc.noeos \
-    --vocabulary ${vocab}
+    python ${InfECE}/calc_ece.py \
+        --prob $FD.prob.noeos \
+        --trans $DIR2/$SUBSET.de \
+        --label $FD.acc.noeos \
+        --vocabulary ${vocab} \
+        --bins 20 \
+        --partition balanced
 }
 
 filename=$2
 if [ "$3" = "train" ]
 then
     extract_fd $DIR2/${filename}
-    train_ece $DIR2/${filename} valid
+    train_ece $DIR2/${filename} $4
 else
     extract_gen $DIR1/${filename}
     inf_ece $DIR1/${filename}
