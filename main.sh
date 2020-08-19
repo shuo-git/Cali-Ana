@@ -5,7 +5,8 @@ TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 CODE=./
 DISK2=/apdcephfs/share_916081/vinceswang
-ROOT=$DISK2/results/wmt14_en_de_stanford_$1
+# ROOT=$DISK2/results/wmt14-en-de/reduce-inference-ece/$1
+ROOT=$DISK2/results/wmt14-en-de/$1
 DIR1=$ROOT/inference
 DIR2=$ROOT/score/sample_status
 
@@ -67,7 +68,7 @@ inf_ece(){
         --label ${hyp}.label.filt \
         --vocabulary ${vocab} \
         --bins 20 \
-        --partition balanced
+        --partition uniform
 
     rm ${hyp}.filt ${hyp}.label.filt ${prob}.filt
 }
@@ -86,7 +87,7 @@ train_ece(){
         --label $FD.acc.noeos \
         --vocabulary ${vocab} \
         --bins 20 \
-        --partition balanced
+        --partition uniform
 }
 
 filename=$2
