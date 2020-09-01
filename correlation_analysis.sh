@@ -3,8 +3,8 @@
 CALI=/disk1/code/Cali-Ana
 InfECE=/disk1/code/InfECE
 TER=/disk1/tools/tercom-0.7.25
-DATA=/apdcephfs/private_vinceswang/DATASET/wmt14_en_de_stanford_sampled/100w
-TGTDICT=$DATA/data-bin/dict.de.txt
+DATA=/apdcephfs/private_vinceswang/DATASET/wmt14_en_de_stanford_sampled/10w
+TGTDICT=/disk1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
 
 
 split(){
@@ -14,18 +14,22 @@ split(){
 bleu(){
     REF=$1
     HYP=$2
-    for i in {0..9999};do
-        /disk1/tools/multi-bleu.perl $REF.$i < $HYP.$i >> $HYP.bleulist
+    for i in {0..999};do
+        echo $i
+        fairseq-score --ref $REF.$i --sys $HYP.$i | grep ^BLEU >> $HYP.bleulist
     done
 
-    cat $HYP.bleulist | cut -d ' ' -f3 | cut -d ',' -f1 > $HYP.bleulist.figure
+    cat $HYP.bleulist | cut -d ' ' -f3 | cut -d ',' -f1 > $HYP.bleu1-4list
+    for i in {1..4};do
+        cat $HYP.bleulist | cut -d ' ' -f4 | cut -d '/' -f $i > $HYP.bleu${i}list
+    done
 }
 
 ter_ece(){
     REF=$1
     HYP=$2
     PROB=$3
-    for i in {0..9999};do
+    for i in {0..999};do
         echo $i
         python $CALI/delete_eos.py $PROB.$i
         python $InfECE/add_sen_id.py $REF.$i $REF.$i.ref
@@ -48,10 +52,55 @@ ter_ece(){
     done
 }
 
+ngram_ece(){
+    REF=$1
+    HYP=$2
+    PROB=$3
+    for i in {0..999};do
+        echo $i
+        python $CALI/delete_eos.py $PROB.$i
+        python $InfECE/n_gram_ece.py \
+            --hyp $HYP.$i \
+            --ref $REF.$i \
+            --prob $PROB.$i.noeos \
+            --bins 20 \
+            --partition uniform >> $HYP.ngramlist2
+        rm $PROB.$i.noeos
+    done
+}
+train_ece(){
+    REF=$1
+    PROB=$2
+    ACC=$3
+    for i in {0..999};do
+        echo $i
+        python $CALI/delete_eos.py $PROB.$i
+        python $CALI/delete_eos.py $ACC.$i
+        python $InfECE/calc_ece.py \
+            --prob $PROB.$i.noeos \
+            --trans $REF.$i \
+            --label $ACC.$i.noeos \
+            --vocabulary $TGTDICT \
+            --bins 20 \
+            --partition uniform >> $PROB.calilist
+        rm $PROB.$i.noeos $ACC.$i.noeos
+    done
+}
 
-NUM=10000
+NUM=1000
 REFDIR=$DATA/ref
 HYPDIR=$DATA/search
+FDDIR=$DATA/fd
 
-#bleu $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.4-1.de
-ter_ece $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.4-1.de $HYPDIR/split$NUM/train.4-1.de.prob
+#bleu $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.1-1.de
+#bleu $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.100-1.de
+#bleu $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.4-4.de.oracle
+
+#ter_ece $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.1-1.de $HYPDIR/split$NUM/train.1-1.de.prob
+#ter_ece $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.4-1.de $HYPDIR/split$NUM/train.4-1.de.prob
+#ter_ece $REFDIR/split$NUM/train.de.rpt4 $HYPDIR/split$NUM/train.4-4.de $HYPDIR/split$NUM/train.4-4.de.prob
+
+#ngram_ece $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.1-1.de $HYPDIR/split$NUM/train.1-1.de.prob
+ngram_ece $REFDIR/split$NUM/train.de $HYPDIR/split$NUM/train.4-1.de $HYPDIR/split$NUM/train.4-1.de.prob
+#ngram_ece $REFDIR/split$NUM/train.de.rpt4 $HYPDIR/split$NUM/train.4-4.de $HYPDIR/split$NUM/train.4-4.de.prob
+#train_ece $REFDIR/split$NUM/train.de $FDDIR/split$NUM/status_train_0.hyp.txt.prob $FDDIR/split$NUM/status_train_0.hyp.txt.acc

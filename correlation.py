@@ -33,7 +33,8 @@ def main(args):
 
     data = pd.DataFrame({'Cali': cali, 'Gene': gene})
 
-    print(data.corr()['Cali']['Gene'])
+    # print(data.corr(method='spearman')['Cali']['Gene'])
+    print(data.corr(method='pearson')['Cali']['Gene'])
 
 
 if __name__ == '__main__':
