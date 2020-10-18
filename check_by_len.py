@@ -6,7 +6,8 @@ else:
 	sft = 0
 
 whether_pass = True
-with open(sys.argv[1], 'r') as fr1, open(sys.argv[2], 'r') as fr2:
+with open(sys.argv[1], 'r', encoding='utf-8') as fr1, \
+     open(sys.argv[2], 'r', encoding='utf-8') as fr2:
     lines1 = fr1.readlines()
     lines2 = fr2.readlines()
     if lines1[-1].strip() == '':

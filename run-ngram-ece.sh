@@ -39,10 +39,10 @@ ngram_ece(){
 
 filename=$2
 
-extract_gen $DIR1/${filename}
-ngram_ece $DIR1/${filename}
+#extract_gen $DIR1/${filename}
+#ngram_ece $DIR1/${filename}
 
-#extract_gen ${filename}
-#ngram_ece ${filename}
+extract_gen ${filename}
+ngram_ece ${filename}
 
 # usage: ./main.sh base(exp_info) GEN

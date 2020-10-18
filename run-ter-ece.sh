@@ -3,7 +3,7 @@ DISK1=/apdcephfs/private_vinceswang
 InfECE=$DISK1/code/InfECE
 TER=$DISK1/tools/tercom-0.7.25
 vocab=$DISK1/DATASET/wmt14_en_de_stanford/data-bin/dict.de.txt
-CODE=./
+CODE=$DISK1/code/Cali-Ana
 DISK2=/apdcephfs/share_916081/vinceswang
 # ROOT=$DISK2/results/wmt14-en-de/reduce-inference-ece/$1
 ROOT=$DISK2/results/wmt14-en-de/$1
@@ -96,9 +96,9 @@ then
     extract_fd $DIR2/${filename}
     train_ece $DIR2/${filename} $4
 else
-    extract_gen $DIR1/${filename}
-    inf_ece $DIR1/${filename}
-#    extract_gen ${filename}
-#    inf_ece ${filename}
+#    extract_gen $DIR1/${filename}
+#    inf_ece $DIR1/${filename}
+     extract_gen ${filename}
+     inf_ece ${filename}
 fi
 # usage: ./main.sh base(exp_info) GEN train/inf
